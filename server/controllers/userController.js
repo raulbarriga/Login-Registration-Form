@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
 
 // Description: Register a new user
 // Route: POST /api/users
@@ -6,19 +7,21 @@ import User from "../models/userModel.js";
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
+  // Check if email already exists
   const userExists = await User.findOne({
     email,
   });
-
   if (userExists) {
     res.status(400);
     throw new Error("User already exists.");
   }
 
+  // hash password
+  const hashedPassword = await bcrypt.hash(password, 12);
   const user = await User.create({
     name,
     email,
-    password,
+    password: hashedPassword,
   });
 
   if (user) {
@@ -27,7 +30,7 @@ const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      token: generateToken(user._id),
+      token: generateToken(user.email, user._id),
     });
   } else {
     res.status(400);
@@ -35,7 +38,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// Description: 
+// Description:
 // 1st) Authenticate the user
 // 2nd) Send back a data token to save on the client (used to access protected routes)
 // Route: POST /api/users/login
@@ -49,13 +52,15 @@ const authUser = async (req, res) => {
     email,
   });
 
-  if (user && (await user.matchPassword(password))) {
+  // compare passwords
+  const isPasswordCorrect = await bcrypt.compare(password, user.password); 
+  if (user && isPasswordCorrect) {
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      token: generateToken(user._id),
+      token: generateToken(user.email, user._id),
     });
   } else {
     res.status(401);
