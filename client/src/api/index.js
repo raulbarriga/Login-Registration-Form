@@ -37,6 +37,7 @@ export const register = async (formData) => {
   try {
     const { data } = await API.post("/users/register", formData, config);
 
+    // localStorage.setItem("profile", JSON.stringify(data));
     return data;
   } catch (error) {
     console.log(error);

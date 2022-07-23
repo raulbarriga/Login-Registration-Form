@@ -2,10 +2,11 @@ import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
 // Description: Register a new user
-// Route: POST /api/users
+// Route: POST /users/register
 // Access: Public
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+console.log("server registration body: ", req.body);
 
   // Check if email already exists
   const userExists = await User.findOne({
@@ -41,7 +42,7 @@ const registerUser = async (req, res) => {
 // Description:
 // 1st) Authenticate the user
 // 2nd) Send back a data token to save on the client (used to access protected routes)
-// Route: POST /api/users/login
+// Route: POST /users/login
 // Access: Public
 const authUser = async (req, res) => {
   //1st) get data from the body via Postman to mimic sending a form
@@ -53,7 +54,7 @@ const authUser = async (req, res) => {
   });
 
   // compare passwords
-  const isPasswordCorrect = await bcrypt.compare(password, user.password); 
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
   if (user && isPasswordCorrect) {
     res.json({
       _id: user._id,

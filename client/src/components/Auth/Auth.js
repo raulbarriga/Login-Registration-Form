@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AuthContext from "../../contexts/authContext";
 
 const initialState = {
   firstName: "",
@@ -9,10 +10,13 @@ const initialState = {
 };
 
 const Auth = () => {
+  const { signUp, signIn } = useContext(AuthContext);
+
   const [form, setForm] = useState(initialState);
   const [isRegistered, setIsRegistered] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
   const handleShowPassword = () => setShowPassword(!showPassword);
 
   const switchMode = () => {
@@ -24,10 +28,19 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // can also pass in a 2nd argument to send the history which allows to change the page to something else after submitting
     if (isRegistered) {
-      //   dispatch(signup(form, history));
+      // check if password & confirm passwords match when registering, if they do submit
+      if (initialState.password !== initialState.confirmPassword) {
+        // check where to display this message
+        setMessage("Passwords do not match");
+      } else {
+        // submit registration
+        signUp(form);
+      }
     } else {
-      //   dispatch(signin(form, history));
+      // submit login form here
+      signIn(form);
     }
   };
 
