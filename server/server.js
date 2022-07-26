@@ -5,6 +5,7 @@ import cors from "cors";
 
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import todoRoutes from './routes/todoRoutes.js';
 
 dotenv.config();
 // connect the MongoDB database
@@ -17,6 +18,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
+app.use("/todos", todoRoutes);
 app.use("/users", userRoutes);
 
 app.listen(PORT, () => {
