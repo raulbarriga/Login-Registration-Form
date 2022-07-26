@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import decode from "jwt-decode";
+
+import { withRouter } from "../hooks/withRouter";
 
 const Navbar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
 
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const logout = () => {
-    history.push("/auth");
+    navigate("/auth");
 
     setUser(null);
+    localStorage.removeItem("profile")
   };
-
+console.log("navbar user: ", user)
   useEffect(() => {
     const token = user?.token;
 
@@ -29,10 +32,10 @@ const Navbar = () => {
 
   return (
     <>
-      {user?.result ? (
+      {user ? (
         <div>
           <span>
-            <h6>{user?.result.name}</h6>
+            <h6>{user.name}</h6>
           </span>
           <button onClick={logout}>Logout</button>
         </div>
@@ -43,4 +46,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default withRouter(Navbar);

@@ -1,11 +1,12 @@
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import bcrypt from "bcryptjs";
 
 // Description: Register a new user
 // Route: POST /users/register
 // Access: Public
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 console.log("server registration body: ", req.body);
 
   // Check if email already exists
@@ -20,11 +21,12 @@ console.log("server registration body: ", req.body);
   // hash password
   const hashedPassword = await bcrypt.hash(password, 12);
   const user = await User.create({
-    name,
+    name: `${firstName} ${lastName}`,
     email,
     password: hashedPassword,
   });
 
+  // logs the user in by generating a jwt token
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -53,9 +55,8 @@ const authUser = async (req, res) => {
     email,
   });
 
-  // compare passwords
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (user && isPasswordCorrect) {
+  // if user is first not found, throws error, otherwise compares passwords
+  if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user._id,
       name: user.name,

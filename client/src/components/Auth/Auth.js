@@ -1,5 +1,8 @@
 import React, { useState, useContext } from "react";
-import AuthContext from "../../contexts/authContext";
+import { useNavigate } from "react-router-dom";
+
+import {AuthContext} from "../../contexts/authContext";
+import { withRouter } from "../../hooks/withRouter";
 
 const initialState = {
   firstName: "",
@@ -10,6 +13,8 @@ const initialState = {
 };
 
 const Auth = () => {
+  const navigate = useNavigate();
+
   const { signUp, signIn } = useContext(AuthContext);
 
   const [form, setForm] = useState(initialState);
@@ -36,11 +41,11 @@ const Auth = () => {
         setMessage("Passwords do not match");
       } else {
         // submit registration
-        signUp(form);
+        signUp(form, navigate);
       }
     } else {
       // submit login form here
-      signIn(form);
+      signIn(form, navigate);
     }
   };
 
@@ -51,41 +56,43 @@ const Auth = () => {
     <form onSubmit={handleSubmit}>
       {isRegistered && (
         <>
+          <label htmlFor="First-Name">First Name</label>
           <input
             name="firstName"
-            label="First Name"
-            handleChange={handleChange}
+            id="First-Name"
+            onChange={handleChange}
             // autoFocus
           />
-          <input
-            name="lastName"
-            label="Last Name"
-            handleChange={handleChange}
-          />
+          <label htmlFor="Last-Name">Last Name</label>
+          <input name="lastName" id="Last-Name" onChange={handleChange} />
         </>
       )}
-
+      <label htmlFor="Email-Address">Email Address</label>
       <input
         name="email"
-        label="Email Address"
-        handleChange={handleChange}
+        id="Email-Address"
+        onChange={handleChange}
         type="email"
       />
+      <label htmlFor="Password">Password</label>
       <input
         name="password"
-        label="Password"
-        handleChange={handleChange}
+        id="Password"
+        onChange={handleChange}
         type={showPassword ? "text" : "password"}
-        handleShowPassword={handleShowPassword}
+        // handleShowPassword={handleShowPassword}
       />
 
       {isRegistered && (
-        <input
-          name="confirmPassword"
-          label="Repeat Password"
-          handleChange={handleChange}
-          type="password"
-        />
+        <>
+          <label htmlFor="Password">Confirm Password</label>
+          <input
+            name="confirmPassword"
+            label="Repeat Password"
+            onChange={handleChange}
+            type="password"
+          />
+        </>
       )}
 
       <button type="submit">{isRegistered ? "Register" : "Log In"}</button>
@@ -99,4 +106,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default withRouter(Auth);
