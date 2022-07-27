@@ -43,3 +43,49 @@ export const register = async (formData) => {
     console.log(error);
   }
 };
+
+// // heroku server url
+// const url = process.env.PRODUCTION_URL;
+
+export const getTodos = async () => {
+  try {
+    const { data } = await API.get("/todos");
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const createTodo = async (newTodo) => {
+  try {
+    const todo = {
+      todo: newTodo.todo,
+      completed: newTodo.completed,
+    };
+    const { data } = await API.post("/todos", todo);
+
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const deleteATodo = async (_id) => {
+  try {
+    await API.delete(`"/todos"/${_id}`);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const editTodo = async (_id, todoChange) => {
+  try {
+    console.log(todoChange);
+
+    const data = await API.patch(`"/todos"/${_id}`, todoChange);
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};

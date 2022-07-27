@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import Todo from "../models/todoModel.js";
+import User from "../models/userModel.js";
 
-export const getTodos = async (req, res) => {
+export const getUserTodos = async (req, res) => {
   try {
     const todos = await Todo.find();
 
@@ -11,7 +12,7 @@ export const getTodos = async (req, res) => {
   }
 };
 
-export const createTodo = async (req, res) => {
+export const createUserTodos = async (req, res) => {
   const todo = req.body; // the whole todo
 
   const newTodo = new Todo(todo);
@@ -25,7 +26,7 @@ export const createTodo = async (req, res) => {
   }
 };
 
-export const editTodo = async (req, res) => {
+export const editUserTodos = async (req, res) => {
   const { id: _id } = req.params;
   const todo = req.body; // the whole todo
 
@@ -40,7 +41,7 @@ export const editTodo = async (req, res) => {
   res.json(editedTodo);
 };
 
-export const deleteTodo = async (req, res) => {
+export const deleteUserTodos = async (req, res) => {
   const { id } = req.params;
 
   //check if the id is a valid mongoose id

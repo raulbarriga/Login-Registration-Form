@@ -1,0 +1,25 @@
+.add-task {
+    position: relative;
+  }
+  
+  .add-task input {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    margin-right: 12px;
+    background-color: transparent;
+    padding: 0 4px;
+    color: black;
+    width: calc(100% - 60px);
+  }
+  
+  .add-task button {
+    border-radius: 50%;
+    cursor: pointer;
+    outline: none;
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }

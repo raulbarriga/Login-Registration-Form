@@ -1,0 +1,24 @@
+#todo-list {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #9cc734b8;
+  }
+  
+  .app-wrapper {
+    margin: 0 auto;
+    width: 480px;
+    border-radius: 8px;
+    padding: 24px;
+    overflow: auto;
+    background-color: yellow;
+  }
+  
+  .app-wrapper header {
+    margin-bottom: 12px;
+    font-size: 20px;
+    text-align: center;
+  }
+  

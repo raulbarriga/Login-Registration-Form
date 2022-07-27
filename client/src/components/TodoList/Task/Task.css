@@ -1,0 +1,17 @@
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .checkbox-btn,
+  .edit-btn,
+  .delete-btn {
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 2px;
+    border: none;
+    background-color: blue;
+    color: white;
+    margin: 3px;
+  }

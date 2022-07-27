@@ -1,18 +1,22 @@
 import express from 'express'
 
-import { getTodos,
-    createTodo,
-    editTodo,
-    deleteTodo } from '../controllers/todoController.js'
+import { getUserTodos,
+    createUserTodos,
+    editUserTodos,
+    deleteUserTodos } from '../controllers/todoController.js'
+    import { protect } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
 
+// add protect middleware to only access them if user has authorization
 router.route('/')
-    .get(getTodos)
-    .post(createTodo);
+    // .get(protect, getTodos)
+    .post(protect, createUserTodos);
 
+    // fetch individually user by user
 router.route('/:id')
-    .patch(editTodo)
-    .delete(deleteTodo);
+    .get(protect, getUserTodos)
+    .patch(protect, editUserTodos)
+    .delete(protect, deleteUserTodos);
 
 export default router;
