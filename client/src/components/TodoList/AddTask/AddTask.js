@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { TodosContext } from "../../../contexts/todosContext";
 
 import "./AddTask.css";
 
-const AddTask = ({ saveTodo }) => {
-  const [newTodo, setNewTodo] = useState({
-    todo: "",
-    completed: false,
-  });
+const initialState = {
+  todo: "",
+  completed: false,
+};
+const AddTask = () => {
+  const { saveTodo } = useContext(TodosContext);
+
+  const [newTodo, setNewTodo] = useState(initialState);
 
   const handleForm = (e) => {
     setNewTodo({ ...newTodo, todo: e.target.value });

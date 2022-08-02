@@ -1,66 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import { getTodos, createTodo, deleteATodo, editTodo } from "../../api/index";
-import AddTask from "./Components/AddTask/AddTask";
-import AllTasks from "./Components/AllTasks/AllTasks";
+import AddTask from "./AddTask/AddTask";
+import AllTasks from "./AllTasks/AllTasks";
 
 import "./TodoList.css";
 
 const TodoList = () => {
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  const fetchTodos = () => {
-    getTodos()
-      .then((data) => setTodos(data))
-      .catch((err) => console.log(err.message));
-  };
-
-  const saveTodo = (e, newTodo, setNewTodo) => {
-    e.preventDefault();
-
-    createTodo(newTodo)
-      .then((data) => {
-        console.log(data);
-        setTodos([...todos, data]);
-        console.log(todos);
-      })
-      .catch((err) => console.log(err.message));
-    setNewTodo({
-      todo: "",
-      completed: false,
-    });
-  };
-
-  const deleteTodo = (id) => {
-    deleteATodo(id);
-
-    return setTodos(todos.filter((todo) => todo._id !== id));
-  };
-
-  const updateTodo = (_id, todoChange) => {
-    editTodo(_id, todoChange)
-      .then(({ data }) => {
-        setTodos(todos.map((todo) => (todo._id === data._id ? data : todo)));
-      })
-      .catch((err) => console.log(err.message));
-  };
-
   return (
     <div id="todo-list">
       <div className="app-wrapper">
         <header>
           <h1>To Do List</h1>
         </header>
-        <AddTask saveTodo={saveTodo} />
-        <AllTasks
-          todos={todos}
-          updateTodo={updateTodo}
-          deleteTodo={deleteTodo}
-        />
+        <AddTask />
+        <AllTasks />
       </div>
     </div>
   );

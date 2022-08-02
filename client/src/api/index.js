@@ -73,7 +73,7 @@ export const createTodo = async (newTodo) => {
 
 export const deleteATodo = async (_id) => {
   try {
-    await API.delete(`"/todos"/${_id}`);
+    await API.delete(`/todos/${_id}`);
   } catch (error) {
     console.log(error.message);
   }
@@ -83,7 +83,7 @@ export const editTodo = async (_id, todoChange) => {
   try {
     console.log(todoChange);
 
-    const data = await API.patch(`"/todos"/${_id}`, todoChange);
+    const data = await API.patch(`/todos/${_id}`, todoChange);
     return data;
   } catch (error) {
     console.log(error.message);

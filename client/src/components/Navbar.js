@@ -38,6 +38,9 @@ console.log("navbar user: ", user)
             <h6>{user.name}</h6>
           </span>
           <button onClick={logout}>Logout</button>
+          <Link to="todos">Todos</Link>
+          <Link to="home">Home</Link>
+          <Link to="profile">Profile</Link>
         </div>
       ) : (
         <Link to="/auth">Sign In</Link>

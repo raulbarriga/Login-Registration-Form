@@ -7,15 +7,14 @@ import bcrypt from "bcryptjs";
 // Access: Public
 const registerUser = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-console.log("server registration body: ", req.body);
+  console.log("server registration body: ", req.body);
 
   // Check if email already exists
   const userExists = await User.findOne({
     email,
   });
   if (userExists) {
-    res.status(400);
-    throw new Error("User already exists.");
+    res.status(400).json({ message: "User already exists." });
   }
 
   // hash password
@@ -36,8 +35,7 @@ console.log("server registration body: ", req.body);
       token: generateToken(user.email, user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    res.status(400).json({ message: "Invalid user data" });
   }
 };
 
@@ -65,9 +63,7 @@ const authUser = async (req, res) => {
       token: generateToken(user.email, user._id),
     });
   } else {
-    res.status(401);
-
-    throw new Error("Invalid email or password");
+    res.status(401).json({ message: "Invalid email or password" });
   }
 };
 

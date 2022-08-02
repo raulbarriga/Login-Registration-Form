@@ -10,7 +10,7 @@ const router = express.Router()
 
 // add protect middleware to only access them if user has authorization
 router.route('/')
-    // .get(protect, getTodos)
+    .get(protect, getUserTodos)
     .post(protect, createUserTodos);
 
     // fetch individually user by user

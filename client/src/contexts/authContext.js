@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
         console.log("context signin data: ", data);
 
         localStorage.setItem("profile", JSON.stringify(data));
-        navigate('/');
+        navigate('/todos');
     } catch (error) {
         console.log(error);
     }

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {AuthContext} from "../../contexts/authContext";
+import { AuthContext } from "../../contexts/authContext";
 import { withRouter } from "../../hooks/withRouter";
 
 const initialState = {
@@ -50,7 +50,7 @@ const Auth = () => {
   };
 
   const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
 
   return (
     <form onSubmit={handleSubmit}>
