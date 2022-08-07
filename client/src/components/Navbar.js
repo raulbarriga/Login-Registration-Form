@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import decode from "jwt-decode";
 
 import { withRouter } from "../hooks/withRouter";
+import { AuthContext } from "../contexts/authContext";
 
 const Navbar = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const { userDetails } = useContext(AuthContext);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,12 +14,11 @@ const Navbar = () => {
   const logout = () => {
     navigate("/auth");
 
-    setUser(null);
-    localStorage.removeItem("profile")
+    localStorage.removeItem("profile");
   };
-console.log("navbar user: ", user)
+
   useEffect(() => {
-    const token = user?.token;
+    const token = userDetails?.token;
 
     if (token) {
       const decodedToken = decode(token);
@@ -26,16 +26,16 @@ console.log("navbar user: ", user)
       if (decodedToken.exp * 1000 < new Date().getTime()) logout();
     }
 
-    setUser(JSON.parse(localStorage.getItem("profile")));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // setUser(JSON.parse(localStorage.getItem("profile")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (
     <>
-      {user ? (
+      {userDetails ? (
         <div>
           <span>
-            <h6>{user.name}</h6>
+            <h6>{userDetails.name}</h6>
           </span>
           <button onClick={logout}>Logout</button>
           <Link to="todos">Todos</Link>

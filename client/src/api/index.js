@@ -3,8 +3,11 @@ import axios from "axios";
 // server url
 const API = axios.create({ baseURL: "http://localhost:8000" });
 
+// this happens before all the requests
 API.interceptors.request.use((req) => {
+  // if we have the token, we send it to the server so that it checks if we're actually logged in
   if (localStorage.getItem("profile")) {
+    console.log("index file token: ", JSON.parse(localStorage.getItem("profile")).token)
     req.headers.Authorization = `Bearer ${
       JSON.parse(localStorage.getItem("profile")).token
     }`;
@@ -37,7 +40,40 @@ export const register = async (formData) => {
   try {
     const { data } = await API.post("/users/register", formData, config);
 
-    // localStorage.setItem("profile", JSON.stringify(data));
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserProfile = async (id) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Bearer ${userInfo.token}`,
+    },
+  };
+
+  try {
+    const { data } = await API.get(`/users/${id}`, config);
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserProfile = async (user) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Bearer ${userInfo.token}`,
+    },
+  };
+  console.log("index file user: ", user);
+  try {
+    const { data } = await API.put(`/users/profile`, user, config);
+
     return data;
   } catch (error) {
     console.log(error);

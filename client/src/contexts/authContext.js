@@ -1,19 +1,37 @@
-import React, { createContext, useState } from "react";
-import { register, logIn } from "../api/index";
+import React, { createContext, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
+import {
+  register,
+  logIn,
+  getUserProfile,
+  updateUserProfile,
+} from "../api/index";
 import { withRouter } from "../hooks/withRouter";
 
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
   // const [propertiesPerPage, setPropertiesPerPage] = useState(12);
+  const [userDetails, setUserDetails] = useLocalStorage(
+    "profile",
+    JSON.stringify({})
+  );
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("profile"));
+    if (userInfo) {
+      setUserDetails((prevState) => ({ ...prevState }));
+    }
+    
+  }, []);
 
   const signUp = async (formData, navigate) => {
     try {
       const data = await register(formData);
-      console.log("context signup data: ", data);
+      console.log("context signup userInfo data: ", data);
 
-      localStorage.setItem("profile", JSON.stringify(data));
-      navigate('/');
+      setUserDetails(data);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -21,18 +39,41 @@ const AuthProvider = ({ children }) => {
 
   const signIn = async (formData, navigate) => {
     try {
-        const data = await logIn(formData);
-        console.log("context signin data: ", data);
+      const data = await logIn(formData);
+      console.log("context signin data: ", data);
 
-        localStorage.setItem("profile", JSON.stringify(data));
-        navigate('/todos');
+      setUserDetails(data);
+      navigate("/todos");
     } catch (error) {
-        console.log(error);
+      console.log(error);
+    }
+  };
+
+  const fetchUserDetails = async (id) => {
+    try {
+      const data = await getUserProfile(id);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateUserDetails = async (user) => {
+    try {
+      const data = await updateUserProfile(user);
+
+      // return data;
+      setUserDetails(data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn }}>
+    <AuthContext.Provider
+      value={{ signUp, signIn, updateUserDetails, fetchUserDetails, userDetails }}
+    >
       {children}
     </AuthContext.Provider>
   );

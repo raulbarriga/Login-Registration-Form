@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/authContext";
 
-// todo: maybe prefill name fields for user (see Task component)
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState({
+  const { updateUserDetails, userDetails } =
+    useContext(AuthContext);
+
+  const [updatedUserInfo, setUpdatedUserInfo] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -13,44 +17,73 @@ const Profile = () => {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  //   const handleShowPassword = () => setShowPassword(!showPassword);
-  //   useEffect(() => {
-  //     first;
+  const navigate = useNavigate();
 
-  //     return () => {
-  //       second;
-  //     };
-  //   }, [third]);
+  //   const handleShowPassword = () => setShowPassword(!showPassword);
+
+  useEffect(() => {
+    // we first check if the user is logged in
+    if (!userDetails) {
+      navigate("/auth");
+    } else {
+      // populate firstName, lastName & email from localStorage user info
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        firstName: userDetails.name.split(" ")[0],
+      }));
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        lastName: userDetails.name.split(" ")[1],
+      }));
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        email: userDetails.email,
+      }));
+    }
+  }, [navigate, userDetails]);
+
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (userInfo.password !== userInfo.confirmPassword) {
+    if (updatedUserInfo.password !== updatedUserInfo.confirmPassword) {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-        // need to send any/all changes
-        // moving to the backend to set up the work there too
+      updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
+      setMessage(null);
       setSuccess(true);
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        password: "",
+      }));
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        confirmPassword: "",
+      }));
     }
   };
+
   const handleChange = (e) =>
-    setUserInfo((prevState) => ({
-      ...prevState,
+    setUpdatedUserInfo({
+      ...updatedUserInfo,
       [e.target.name]: e.target.value,
-    }));
+    });
 
   return (
     <div className="profile-wrapper">
       <h2>User Profile</h2>
-      Name: {userInfo.firstName} {userInfo.lastName}
-      Email: {userInfo.email}
+      Name: {updatedUserInfo.firstName} {updatedUserInfo.lastName}
+      <br />
+      Email: {updatedUserInfo.email}
+      <br />
       {message && <span>{message}</span>}
+      <br />
       {success && <span>Profile Updated</span>}
       <form onSubmit={submitHandler}>
         <label htmlFor="First-Name">First Name</label>
         <input
           name="firstName"
-          value={userInfo.firstName}
+          value={updatedUserInfo.firstName}
           id="First-Name"
           onChange={handleChange}
         />
@@ -58,14 +91,14 @@ const Profile = () => {
         <input
           name="lastName"
           id="Last-Name"
-          value={userInfo.lastName}
+          value={updatedUserInfo.lastName}
           onChange={handleChange}
         />
         <label htmlFor="Email-Address">Email Address</label>
         <input
           name="email"
           id="Email-Address"
-          value={userInfo.email}
+          value={updatedUserInfo.email}
           onChange={handleChange}
           type="email"
         />
@@ -73,7 +106,7 @@ const Profile = () => {
         <input
           name="password"
           id="Password"
-          value={userInfo.password}
+          value={updatedUserInfo.password}
           onChange={handleChange}
           type={showPassword ? "text" : "password"}
           // handleShowPassword={handleShowPassword}
@@ -82,7 +115,7 @@ const Profile = () => {
         <input
           name="confirmPassword"
           label="Repeat Password"
-          value={userInfo.confirmPassword}
+          value={updatedUserInfo.confirmPassword}
           onChange={handleChange}
           type="password"
         />

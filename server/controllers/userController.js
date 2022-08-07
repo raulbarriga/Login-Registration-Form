@@ -17,8 +17,9 @@ const registerUser = async (req, res) => {
     res.status(400).json({ message: "User already exists." });
   }
 
+  // don't need this anymore since the .pre("save") method
   // hash password
-  const hashedPassword = await bcrypt.hash(password, 12);
+  // const hashedPassword = await bcrypt.hash(password, 12);
   const user = await User.create({
     name: `${firstName} ${lastName}`,
     email,
@@ -67,4 +68,55 @@ const authUser = async (req, res) => {
   }
 };
 
-export { authUser, registerUser };
+// Description: Get user profile
+// Route: GET /users/profile
+// Access: Private
+const getUserProfile = async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+};
+
+// Description: Update user profile
+// Route: PUT /users/profile
+// Access: Private
+const updateUserProfile = async (req, res) => {
+  console.log("req.user: ", req.user);
+  console.log("req.body: ", req.body);
+  const { firstName, lastName, email, password } = req.body;
+  // get user by id from the frontend request
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    // if any of these are not in the requested update, then the defaults will remain (i.e. user.name, etc.)
+    user.name = firstName && lastName ? `${firstName} ${lastName}` : user.name;
+    user.email = email || user.email;
+    // if a password change was sent from the frontend
+    if (password) {
+      user.password = password;
+    }
+
+    // run the .pre("save",...) function to hash the password anytime we use .save() from mongoose/mongodb
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      token: generateToken(updatedUser.email, updatedUser._id),
+    });
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+};
+
+export { authUser, registerUser, getUserProfile, updateUserProfile };
