@@ -1,5 +1,5 @@
-import React, { createContext, useEffect } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
+import React, { createContext, useEffect, useState } from "react";
+// import useLocalStorage from "../hooks/useLocalStorage";
 import {
   register,
   logIn,
@@ -11,19 +11,36 @@ import { withRouter } from "../hooks/withRouter";
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
-  // const [propertiesPerPage, setPropertiesPerPage] = useState(12);
-  const [userDetails, setUserDetails] = useLocalStorage(
-    "profile",
-    JSON.stringify({})
-  );
+  const [userDetails, setUserDetails] = useState({});
+  // () => {
+  //   const localData = localStorage.getItem("profile");
+  //   return localData ? JSON.parse(localData) : {};
+  // }
 
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("profile"));
-    if (userInfo) {
-      setUserDetails((prevState) => ({ ...prevState }));
+  // useLocalStorage("profile", "");
+  // JSON.stringify({})
+
+  // console.log(localStorage.getItem("profile"));
+  // useEffect(() => {
+  //   // if (localStorage.getItem("profile")) {
+  //     const userInfo = JSON.parse(localStorage.getItem("profile"));
+
+  //     // (prevState) =>
+  //     setUserDetails(userInfo);
+  //   // }
+  // }, [userDetails]);
+
+  /*
+if (localStorage.getItem("profile")) {
+      const userInfo = JSON.parse(localStorage.getItem("profile"));
+      // if (userInfo) {
+        // (prevState) => 
+      setUserDetails(({ ...userDetails, profile: userInfo }));
+
+      // }
     }
-    
-  }, []);
+
+  */
 
   const signUp = async (formData, navigate) => {
     try {
@@ -31,6 +48,7 @@ const AuthProvider = ({ children }) => {
       console.log("context signup userInfo data: ", data);
 
       setUserDetails(data);
+      // localStorage.setItem("profile", data);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -43,6 +61,7 @@ const AuthProvider = ({ children }) => {
       console.log("context signin data: ", data);
 
       setUserDetails(data);
+      // localStorage.setItem("profile", data);
       navigate("/todos");
     } catch (error) {
       console.log(error);
@@ -65,6 +84,7 @@ const AuthProvider = ({ children }) => {
 
       // return data;
       setUserDetails(data);
+      // localStorage.setItem("profile", data);
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +92,13 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signUp, signIn, updateUserDetails, fetchUserDetails, userDetails }}
+      value={{
+        signUp,
+        signIn,
+        updateUserDetails,
+        fetchUserDetails,
+        userDetails,
+      }}
     >
       {children}
     </AuthContext.Provider>

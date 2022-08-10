@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
 
 const Profile = () => {
-  const { updateUserDetails, userDetails } =
-    useContext(AuthContext);
+  const { updateUserDetails, userDetails } = useContext(AuthContext);
 
   const [updatedUserInfo, setUpdatedUserInfo] = useState({
     firstName: "",
@@ -12,6 +11,7 @@ const Profile = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    // pic: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
@@ -39,17 +39,28 @@ const Profile = () => {
         ...prevState,
         email: userDetails.email,
       }));
+      // setUpdatedUserInfo((prevState) => ({
+      //   ...prevState,
+      //   pic: userDetails.pic,
+      // }));
     }
   }, [navigate, userDetails]);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
+    // const formData = new FormData();
+    // if (updatedUserInfo.pic) {
+    //   formData.append("file", updatedUserInfo.pic);
+    //   formData.append("fileName", updatedUserInfo.pic.name);
+    //   console.log("form data variable: ", formData);
+    // }
+
     if (updatedUserInfo.password !== updatedUserInfo.confirmPassword) {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-      updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
+      // updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
       setMessage(null);
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
@@ -63,6 +74,7 @@ const Profile = () => {
     }
   };
 
+  // e.target.name === "pic" ? e.target.files[0] :
   const handleChange = (e) =>
     setUpdatedUserInfo({
       ...updatedUserInfo,
@@ -79,6 +91,8 @@ const Profile = () => {
       {message && <span>{message}</span>}
       <br />
       {success && <span>Profile Updated</span>}
+      <br />
+      <img src={updatedUserInfo.pic} alt="profile-img" />
       <form onSubmit={submitHandler}>
         <label htmlFor="First-Name">First Name</label>
         <input
@@ -111,14 +125,24 @@ const Profile = () => {
           type={showPassword ? "text" : "password"}
           // handleShowPassword={handleShowPassword}
         />
-        <label htmlFor="Password">Confirm Password</label>
+        <label htmlFor="confirmPassword">Confirm Password</label>
         <input
           name="confirmPassword"
-          label="Repeat Password"
+          id="confirmPassword"
           value={updatedUserInfo.confirmPassword}
           onChange={handleChange}
           type="password"
         />
+        {/* <label htmlFor="user-img">User Image</label>
+        <input
+          name="pic"
+          id="user-img"
+          // value={updatedUserInfo.pic}
+
+          onChange={handleChange}
+          type="file"
+          // alt="profile-image"
+        /> */}
         <button type="submit">Update</button>
       </form>
     </div>

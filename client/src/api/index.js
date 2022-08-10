@@ -35,6 +35,7 @@ export const register = async (formData) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      // "Content-Type": "multipart/form-data"
     },
   };
   try {
@@ -67,6 +68,7 @@ export const updateUserProfile = async (user) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
+      // "Content-Type": "multipart/form-data",
       // Authorization: `Bearer ${userInfo.token}`,
     },
   };

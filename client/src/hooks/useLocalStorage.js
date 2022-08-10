@@ -1,5 +1,5 @@
 // from https://usehooks.com/useLocalStorage/
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /*
 use like so:
@@ -17,9 +17,10 @@ function App() {
       />
     </div>
   );
-}
-   
+}   
 */
+
+/*
 const useLocalStorage = (key, initialValue) => {
     // State to store our value
     // Pass initial state function to useState so logic is only executed once
@@ -60,3 +61,31 @@ const useLocalStorage = (key, initialValue) => {
   }
 
   export default useLocalStorage;
+  */
+
+// https://blog.logrocket.com/using-localstorage-react-hooks/
+function getStorageValue(key, defaultValue) {
+  // getting stored value
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(key);
+    console.log("saved: ", saved);
+    // 
+    const initial = saved !== null && saved !== undefined ? JSON.parse(saved) : defaultValue;
+    return initial;
+  }
+}
+
+const useLocalStorage = (key, defaultValue) => {
+  const [value, setValue] = useState(() => {
+    return getStorageValue(key, defaultValue);
+  });
+
+  useEffect(() => {
+    // storing input name
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+};
+
+export default useLocalStorage;

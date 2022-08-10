@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/authContext";
 import { withRouter } from "../../hooks/withRouter";
+import "./Auth.css";
 
 const initialState = {
   firstName: "",
@@ -10,6 +11,7 @@ const initialState = {
   email: "",
   password: "",
   confirmPassword: "",
+  // pic: "",
 };
 
 const Auth = () => {
@@ -18,7 +20,7 @@ const Auth = () => {
   const { signUp, signIn } = useContext(AuthContext);
 
   const [form, setForm] = useState(initialState);
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
@@ -26,15 +28,25 @@ const Auth = () => {
 
   const switchMode = () => {
     setForm(initialState);
-    setIsRegistered((prevIsRegistered) => !prevIsRegistered);
+    setIsRegister((prevIsRegistered) => !prevIsRegistered);
     setShowPassword(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    /*
+    const formData = new FormData();
+    for (const key of form) {
+      formData.set(JSON.stringify(key), form[key]);
+    }
+    // formData.append("file", form.pic);
+    formData.set("fileName", form.pic.name);
+    console.log("form data variable: ", formData);
+*/
+
     // can also pass in a 2nd argument to send the history which allows to change the page to something else after submitting
-    if (isRegistered) {
+    if (isRegister) {
       // check if password & confirm passwords match when registering, if they do submit
       if (initialState.password !== initialState.confirmPassword) {
         // check where to display this message
@@ -49,60 +61,79 @@ const Auth = () => {
     }
   };
 
-  const handleChange = (e) =>
-    setForm((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
+  // e.target.name === "pic" ? e.target.files[0] :
+  const handleChange = (e) => {
+    setForm((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+    console.log("on change form: ", form);
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {isRegistered && (
-        <>
-          <label htmlFor="First-Name">First Name</label>
+    <>
+      <div className="container">
+        <form onSubmit={handleSubmit}>
+          {isRegister && (
+            <>
+              {/* <label htmlFor="user-img">User Image</label>
+              <input
+                name="pic"
+                id="user-img"
+                // value={updatedUserInfo.pic}
+
+                onChange={handleChange}
+                type="file"
+                // alt="profile-image"
+              /> */}
+              <label htmlFor="First-Name">First Name</label>
+              <input
+                name="firstName"
+                id="First-Name"
+                onChange={handleChange}
+                // autoFocus
+              />
+              <label htmlFor="Last-Name">Last Name</label>
+              <input name="lastName" id="Last-Name" onChange={handleChange} />
+            </>
+          )}
+          <label htmlFor="Email-Address">Email Address</label>
           <input
-            name="firstName"
-            id="First-Name"
+            name="email"
+            id="Email-Address"
             onChange={handleChange}
-            // autoFocus
+            type="email"
           />
-          <label htmlFor="Last-Name">Last Name</label>
-          <input name="lastName" id="Last-Name" onChange={handleChange} />
-        </>
-      )}
-      <label htmlFor="Email-Address">Email Address</label>
-      <input
-        name="email"
-        id="Email-Address"
-        onChange={handleChange}
-        type="email"
-      />
-      <label htmlFor="Password">Password</label>
-      <input
-        name="password"
-        id="Password"
-        onChange={handleChange}
-        type={showPassword ? "text" : "password"}
-        // handleShowPassword={handleShowPassword}
-      />
-
-      {isRegistered && (
-        <>
-          <label htmlFor="Password">Confirm Password</label>
+          <label htmlFor="Password">Password</label>
           <input
-            name="confirmPassword"
-            label="Repeat Password"
+            name="password"
+            id="Password"
             onChange={handleChange}
-            type="password"
+            type={showPassword ? "text" : "password"}
+            // handleShowPassword={handleShowPassword}
           />
-        </>
-      )}
 
-      <button type="submit">{isRegistered ? "Register" : "Log In"}</button>
+          {isRegister && (
+            <>
+              <label htmlFor="Password">Confirm Password</label>
+              <input
+                name="confirmPassword"
+                label="Repeat Password"
+                onChange={handleChange}
+                type="password"
+              />
+            </>
+          )}
 
-      <button onClick={switchMode}>
-        {isRegistered
-          ? "Already have an account? Log In"
-          : "Don't have an account? Register"}
-      </button>
-    </form>
+          <button type="submit">{isRegister ? "Register" : "Log In"}</button>
+        </form>
+        <button onClick={switchMode}>
+          {isRegister
+            ? "Already have an account? Log In"
+            : "Don't have an account? Register"}
+        </button>
+      </div>
+    </>
   );
 };
 
