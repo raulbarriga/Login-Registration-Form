@@ -20,7 +20,7 @@ const Auth = () => {
   const { signUp, signIn } = useContext(AuthContext);
 
   const [form, setForm] = useState(initialState);
-  const [isRegister, setIsRegister] = useState(false);
+  const [isRegisterScreen, setIsRegisterScreen] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
@@ -28,7 +28,7 @@ const Auth = () => {
 
   const switchMode = () => {
     setForm(initialState);
-    setIsRegister((prevIsRegistered) => !prevIsRegistered);
+    setIsRegisterScreen((prevIsRegistered) => !prevIsRegistered);
     setShowPassword(false);
   };
 
@@ -46,7 +46,7 @@ const Auth = () => {
 */
 
     // can also pass in a 2nd argument to send the history which allows to change the page to something else after submitting
-    if (isRegister) {
+    if (isRegisterScreen) {
       // check if password & confirm passwords match when registering, if they do submit
       if (initialState.password !== initialState.confirmPassword) {
         // check where to display this message
@@ -57,6 +57,7 @@ const Auth = () => {
       }
     } else {
       // submit login form here
+      console.log("form: ", form)
       signIn(form, navigate);
     }
   };
@@ -67,14 +68,14 @@ const Auth = () => {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-    console.log("on change form: ", form);
+    // console.log("on change form: ", form);
   };
 
   return (
     <>
       <div className="container">
         <form onSubmit={handleSubmit}>
-          {isRegister && (
+          {isRegisterScreen && (
             <>
               {/* <label htmlFor="user-img">User Image</label>
               <input
@@ -113,7 +114,7 @@ const Auth = () => {
             // handleShowPassword={handleShowPassword}
           />
 
-          {isRegister && (
+          {isRegisterScreen && (
             <>
               <label htmlFor="Password">Confirm Password</label>
               <input
@@ -125,10 +126,10 @@ const Auth = () => {
             </>
           )}
 
-          <button type="submit">{isRegister ? "Register" : "Log In"}</button>
+          <button type="submit">{isRegisterScreen ? "Register" : "Log In"}</button>
         </form>
         <button onClick={switchMode}>
-          {isRegister
+          {isRegisterScreen
             ? "Already have an account? Log In"
             : "Don't have an account? Register"}
         </button>

@@ -7,7 +7,6 @@ const API = axios.create({ baseURL: "http://localhost:8000" });
 API.interceptors.request.use((req) => {
   // if we have the token, we send it to the server so that it checks if we're actually logged in
   if (localStorage.getItem("profile")) {
-    console.log("index file token: ", JSON.parse(localStorage.getItem("profile")).token)
     req.headers.Authorization = `Bearer ${
       JSON.parse(localStorage.getItem("profile")).token
     }`;
@@ -23,7 +22,9 @@ export const logIn = async (formData) => {
     },
   };
   try {
-    const { data } = await API.post("/users/login", formData, config);
+    console.log("index formData: ", formData)
+    const {data} = await API.post("/users/login", formData, config);
+    console.log("index response: ", data)
 
     return data;
   } catch (error) {

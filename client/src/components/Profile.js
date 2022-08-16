@@ -60,7 +60,7 @@ const Profile = () => {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-      // updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
+      updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
       setMessage(null);
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
@@ -92,7 +92,7 @@ const Profile = () => {
       <br />
       {success && <span>Profile Updated</span>}
       <br />
-      <img src={updatedUserInfo.pic} alt="profile-img" />
+      {/* <img src={updatedUserInfo.pic} alt="profile-img" /> */}
       <form onSubmit={submitHandler}>
         <label htmlFor="First-Name">First Name</label>
         <input

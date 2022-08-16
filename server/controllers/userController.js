@@ -6,7 +6,8 @@ import bcrypt from "bcryptjs";
 // Route: POST /users/register
 // Access: Public
 const registerUser = async (req, res) => {
-  const { email, firstName, lastName, pic } = req.body;
+  // , pic
+  const { email, firstName, lastName, password } = req.body;
   console.log("server registration body: ", req.body);
 
   // Check if email already exists
@@ -24,7 +25,7 @@ const registerUser = async (req, res) => {
     name: `${firstName} ${lastName}`,
     email,
     password,
-    pic
+    // pic
   });
 
   // logs the user in by generating a jwt token
@@ -34,7 +35,7 @@ const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      pic: user.pic,
+      // pic: user.pic,
       token: generateToken(user.email, user._id),
     });
   } else {
@@ -63,7 +64,7 @@ const authUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      pic: user.pic,
+      // pic: user.pic,
       token: generateToken(user.email, user._id),
     });
   } else {
@@ -83,7 +84,7 @@ const getUserProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      pic: user.pic
+      // pic: user.pic
     });
   } else {
     res.status(404).json({ message: "User not found" });
@@ -96,7 +97,8 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   console.log("req.user: ", req.user);
   console.log("req.body: ", req.body);
-  const { firstName, lastName, email, password, pic } = req.body;
+  // , pic
+  const { firstName, lastName, email, password } = req.body;
   // get user by id from the frontend request
   const user = await User.findById(req.user._id);
 
@@ -104,7 +106,7 @@ const updateUserProfile = async (req, res) => {
     // if any of these are not in the requested update, then the defaults will remain (i.e. user.name, etc.)
     user.name = firstName && lastName ? `${firstName} ${lastName}` : user.name;
     user.email = email || user.email;
-    user.pic = pic || user.pic;
+    // user.pic = pic || user.pic;
     // if a password change was sent from the frontend
     if (password) {
       user.password = password;
@@ -117,7 +119,7 @@ const updateUserProfile = async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
-      pic: user.pic,
+      // pic: user.pic,
       token: generateToken(updatedUser.email, updatedUser._id),
     });
   } else {

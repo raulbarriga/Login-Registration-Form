@@ -12,35 +12,20 @@ export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({});
-  // () => {
-  //   const localData = localStorage.getItem("profile");
-  //   return localData ? JSON.parse(localData) : {};
-  // }
 
-  // useLocalStorage("profile", "");
-  // JSON.stringify({})
-
-  // console.log(localStorage.getItem("profile"));
-  // useEffect(() => {
-  //   // if (localStorage.getItem("profile")) {
-  //     const userInfo = JSON.parse(localStorage.getItem("profile"));
-
-  //     // (prevState) =>
-  //     setUserDetails(userInfo);
-  //   // }
-  // }, [userDetails]);
-
-  /*
-if (localStorage.getItem("profile")) {
-      const userInfo = JSON.parse(localStorage.getItem("profile"));
-      // if (userInfo) {
-        // (prevState) => 
-      setUserDetails(({ ...userDetails, profile: userInfo }));
-
-      // }
+  console.log(userDetails);
+  useEffect(() => {
+    async function init() {
+      const data = await localStorage.getItem("profile");
+      setUserDetails(JSON.parse(data));
     }
+    init();
+  }, []);
 
-  */
+  useEffect(() => {
+    if (Object.keys(userDetails).length !== 0)
+      localStorage.setItem("profile", JSON.stringify(userDetails));
+  }, [userDetails]);
 
   const signUp = async (formData, navigate) => {
     try {
@@ -48,7 +33,7 @@ if (localStorage.getItem("profile")) {
       console.log("context signup userInfo data: ", data);
 
       setUserDetails(data);
-      // localStorage.setItem("profile", data);
+      localStorage.setItem("profile", JSON.stringify(userDetails));
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -57,11 +42,12 @@ if (localStorage.getItem("profile")) {
 
   const signIn = async (formData, navigate) => {
     try {
+      console.log("formData: ", formData);
       const data = await logIn(formData);
       console.log("context signin data: ", data);
 
       setUserDetails(data);
-      // localStorage.setItem("profile", data);
+      localStorage.setItem("profile", JSON.stringify(data));
       navigate("/todos");
     } catch (error) {
       console.log(error);
@@ -84,7 +70,7 @@ if (localStorage.getItem("profile")) {
 
       // return data;
       setUserDetails(data);
-      // localStorage.setItem("profile", data);
+      localStorage.setItem("profile", JSON.stringify(userDetails));
     } catch (error) {
       console.log(error);
     }
