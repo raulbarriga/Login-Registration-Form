@@ -16,8 +16,10 @@ const AuthProvider = ({ children }) => {
   console.log(userDetails);
   useEffect(() => {
     async function init() {
-      const data = await localStorage.getItem("profile");
-      setUserDetails(JSON.parse(data));
+      if (localStorage.getItem("profile")) {
+        const data = await localStorage.getItem("profile");
+        setUserDetails(JSON.parse(data));
+      }
     }
     init();
   }, []);

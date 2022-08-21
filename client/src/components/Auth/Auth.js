@@ -10,8 +10,7 @@ const initialState = {
   lastName: "",
   email: "",
   password: "",
-  confirmPassword: "",
-  // pic: "",
+  confirmPassword: ""
 };
 
 const Auth = () => {
@@ -35,16 +34,6 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    /*
-    const formData = new FormData();
-    for (const key of form) {
-      formData.set(JSON.stringify(key), form[key]);
-    }
-    // formData.append("file", form.pic);
-    formData.set("fileName", form.pic.name);
-    console.log("form data variable: ", formData);
-*/
-
     // can also pass in a 2nd argument to send the history which allows to change the page to something else after submitting
     if (isRegisterScreen) {
       // check if password & confirm passwords match when registering, if they do submit
@@ -57,12 +46,12 @@ const Auth = () => {
       }
     } else {
       // submit login form here
-      console.log("form: ", form)
+      // console.log("form: ", form);
       signIn(form, navigate);
     }
   };
 
-  // e.target.name === "pic" ? e.target.files[0] :
+  //
   const handleChange = (e) => {
     setForm((prevState) => ({
       ...prevState,
@@ -74,19 +63,9 @@ const Auth = () => {
   return (
     <>
       <div className="container">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           {isRegisterScreen && (
             <>
-              {/* <label htmlFor="user-img">User Image</label>
-              <input
-                name="pic"
-                id="user-img"
-                // value={updatedUserInfo.pic}
-
-                onChange={handleChange}
-                type="file"
-                // alt="profile-image"
-              /> */}
               <label htmlFor="First-Name">First Name</label>
               <input
                 name="firstName"
@@ -126,7 +105,9 @@ const Auth = () => {
             </>
           )}
 
-          <button type="submit">{isRegisterScreen ? "Register" : "Log In"}</button>
+          <button type="submit">
+            {isRegisterScreen ? "Register" : "Log In"}
+          </button>
         </form>
         <button onClick={switchMode}>
           {isRegisterScreen

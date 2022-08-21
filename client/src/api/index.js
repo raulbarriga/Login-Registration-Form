@@ -35,12 +35,14 @@ export const logIn = async (formData) => {
 export const register = async (formData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      // "Content-Type": "multipart/form-data"
+      // "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data"
     },
   };
   try {
+    console.log("index formData before: ", formData);
     const { data } = await API.post("/users/register", formData, config);
+    console.log("index formData after: ", formData);
 
     return data;
   } catch (error) {

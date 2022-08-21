@@ -11,8 +11,9 @@ const Profile = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    // pic: "",
+    pic: null,
   });
+  // const [selectedImage, setSelectedImage] = useState(null)
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -39,28 +40,34 @@ const Profile = () => {
         ...prevState,
         email: userDetails.email,
       }));
-      // setUpdatedUserInfo((prevState) => ({
-      //   ...prevState,
-      //   pic: userDetails.pic,
-      // }));
+      setUpdatedUserInfo((prevState) => ({
+        ...prevState,
+        pic: userDetails.pic,
+      }));
     }
   }, [navigate, userDetails]);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // const formData = new FormData();
-    // if (updatedUserInfo.pic) {
-    //   formData.append("file", updatedUserInfo.pic);
-    //   formData.append("fileName", updatedUserInfo.pic.name);
-    //   console.log("form data variable: ", formData);
-    // }
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(updatedUserInfo)) {
+      formData.append(JSON.stringify(key), value);
+    }
+
+    /*
+    // to console log formData
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+    */
 
     if (updatedUserInfo.password !== updatedUserInfo.confirmPassword) {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-      updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
+      updateUserDetails({ id: userDetails._id, formData });
       setMessage(null);
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
@@ -74,11 +81,11 @@ const Profile = () => {
     }
   };
 
-  // e.target.name === "pic" ? e.target.files[0] :
   const handleChange = (e) =>
     setUpdatedUserInfo({
       ...updatedUserInfo,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.name === "pic" ? e.target.files[0] : e.target.value,
     });
 
   return (
@@ -88,12 +95,23 @@ const Profile = () => {
       <br />
       Email: {updatedUserInfo.email}
       <br />
+      {updatedUserInfo.pic}
+      <br />
       {message && <span>{message}</span>}
       <br />
       {success && <span>Profile Updated</span>}
       <br />
       {/* <img src={updatedUserInfo.pic} alt="profile-img" /> */}
       <form onSubmit={submitHandler}>
+        <label htmlFor="user-img">User Image</label>
+        <input
+          name="pic"
+          id="user-img"
+          // (e) => setSelectedImage(e.target.files[0])
+          onChange={handleChange}
+          type="file"
+          // alt="profile-image"
+        />
         <label htmlFor="First-Name">First Name</label>
         <input
           name="firstName"
