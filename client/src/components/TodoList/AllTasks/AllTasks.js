@@ -11,9 +11,7 @@ const AllTasks = () => {
   // console.log("AllTasks todos: ", todos);
   return (
     <div className="all-tasks">
-      {todos.map((todo) => (
-        <Task todo={todo} key={todo._id} />
-      ))}
+      {todos ? todos.map((todo) => <Task todo={todo} key={todo._id} />) : null}
     </div>
   );
 };

@@ -11,7 +11,7 @@ const Profile = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    pic: null,
+    pic: "",
   });
   // const [selectedImage, setSelectedImage] = useState(null)
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +27,7 @@ const Profile = () => {
     if (!userDetails) {
       navigate("/auth");
     } else {
+      console.log("for populating userDetails: ", userDetails);
       // populate firstName, lastName & email from localStorage user info
       setUpdatedUserInfo((prevState) => ({
         ...prevState,
@@ -55,19 +56,20 @@ const Profile = () => {
     for (let [key, value] of Object.entries(updatedUserInfo)) {
       formData.append(JSON.stringify(key), value);
     }
-
-    /*
+    formData.append("id", userDetails._id);
+    /* 
     // to console log formData
     for (let pair of formData.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }
     */
+    console.log("...formData: ", ...formData);
 
     if (updatedUserInfo.password !== updatedUserInfo.confirmPassword) {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-      updateUserDetails({ id: userDetails._id, formData });
+      updateUserDetails(formData);
       setMessage(null);
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
@@ -81,12 +83,14 @@ const Profile = () => {
     }
   };
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setUpdatedUserInfo({
       ...updatedUserInfo,
       [e.target.name]:
         e.target.name === "pic" ? e.target.files[0] : e.target.value,
     });
+    console.log("updatedUserInfo.pic onChange: ", updatedUserInfo);
+  };
 
   return (
     <div className="profile-wrapper">
@@ -95,7 +99,7 @@ const Profile = () => {
       <br />
       Email: {updatedUserInfo.email}
       <br />
-      {updatedUserInfo.pic}
+      <img src={updatedUserInfo.pic} alt="user" />
       <br />
       {message && <span>{message}</span>}
       <br />

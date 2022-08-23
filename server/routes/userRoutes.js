@@ -1,5 +1,4 @@
 import express from "express";
-import multer from "multer";
 
 import {
   authUser,
@@ -8,9 +7,7 @@ import {
   updateUserProfile,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+import { upload } from "../middleware/multerMiddleware.js";
 
 const router = express.Router();
 // it'll be /users/register etc.

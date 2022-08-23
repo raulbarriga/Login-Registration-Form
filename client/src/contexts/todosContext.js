@@ -1,20 +1,27 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 
 import { getTodos, createTodo, deleteATodo, editTodo } from "../api/index";
+import { AuthContext } from "./authContext";
 
 export const TodosContext = createContext({});
 
 const TodosProvider = ({ children }) => {
-  const [todos, setTodos] = useState([]);
+  const { userDetails } = useContext(AuthContext);
+  // const user = JSON.parse(localStorage.getItem('profile'));
+
+  const [todos, setTodos] = useState(null);
 
   useEffect(() => {
-    fetchTodos();
+    // if a logged in user exists, fetch his todos list
+    if (userDetails) {
+      fetchTodos(userDetails._id);
+    }
   }, []);
 
-  const fetchTodos = async () => {
+  const fetchTodos = async (userID) => {
     try {
-      const data = await getTodos();
-
+      const data = await getTodos(userID);
+      // console.log("fetched user todos: ", data);
       setTodos(data);
     } catch (error) {
       console.log(error.message);
@@ -25,11 +32,12 @@ const TodosProvider = ({ children }) => {
     e.preventDefault();
 
     try {
-      const data = await createTodo(newTodo);
-      console.log(data);
+      const data = await createTodo(newTodo, userDetails._id);
+      // console.log(data);
 
       setTodos([...todos, data]);
-      console.log(todos);
+      // console.log("todos: ", todos);
+      // console.log("todos type: ", typeof todos);
     } catch (error) {
       console.log(error.message);
     }

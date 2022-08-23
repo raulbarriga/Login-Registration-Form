@@ -13,10 +13,7 @@ const AddTask = () => {
 
   const [newTodo, setNewTodo] = useState(initialState);
 
-  const handleForm = (e) => {
-    setNewTodo({ ...newTodo, todo: e.target.value });
-    console.log(newTodo);
-  };
+  const handleForm = (e) => setNewTodo({ ...newTodo, todo: e.target.value });
 
   return (
     <div className="add-task">

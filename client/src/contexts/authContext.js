@@ -13,7 +13,6 @@ export const AuthContext = createContext({});
 const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({});
 
-  console.log(userDetails);
   useEffect(() => {
     async function init() {
       if (localStorage.getItem("profile")) {
@@ -68,7 +67,9 @@ const AuthProvider = ({ children }) => {
 
   const updateUserDetails = async (user) => {
     try {
+      console.log("context before update: ", ...user)
       const data = await updateUserProfile(user);
+      console.log("context after update: ", data)
 
       // return data;
       setUserDetails(data);

@@ -50,8 +50,6 @@ const registerUser = async (req, res) => {
   } else {
     res.status(400).json({ message: "Invalid user data" });
   }
-
-  res.status(201).json({ message: "request completed!" });
 };
 
 // Description:
@@ -105,18 +103,18 @@ const getUserProfile = async (req, res) => {
 // Route: PUT /users/profile
 // Access: Private
 const updateUserProfile = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  // const { firstName, lastName, email, password, id } = req.body;
   // pic was the whole file object, but the actual image is buffer
-  const { orginalname, buffer, mimetype } = req.file;
-
-  console.log("req.user: ", req.user);
   console.log("req.body: ", req.body);
+  console.log("req.file: ", req.file);
+  // const { originalname, buffer, mimetype } = req.file;
 
+
+  /*
   // get user by id from the frontend request
-  const user = await User.findById(req.user._id);
-
+  // const user = await User.findById(id);
   if (user) {
-    //---------- image logic (only if user is found) --------------
+    //************** image logic (only if user is found) **************
     // modify/edit image here using buffer
     const convertToJpg = async (input) => {
       if (isJpg(input)) {
@@ -132,10 +130,10 @@ const updateUserProfile = async (req, res) => {
     });
 
     // key is the image's name (pass unique names to not overwrite same file name), but we choose to overwrite to not have unused stored images
-    // `${orginalname}'-'${Date.now() + Math.random()}` // unique name
+    // `${originalname}'-'${Date.now() + Math.random()}` // unique name
     const params = {
       Bucket: bucketName,
-      Key: orginalname,
+      Key: originalname,
       Body: miniBuffer,
       ContentType: mimetype,
     };
@@ -146,14 +144,14 @@ const updateUserProfile = async (req, res) => {
     // now that the file's stored we can get its url
     const getObjectParams = {
       Bucket: bucketName,
-      Key: orginalname,
+      Key: originalname,
     };
 
     const command1 = new GetObjectCommand(getObjectParams);
     // pass this url to user.pic
     // expiresIn is in seconds, 3600 is 1hr
     const url = await getSignedUrl(connectToS3, command1, { expiresIn: 3600 });
-    //-------------------------------------
+    // ************************************************
 
     // if any of these are not in the requested update, then the defaults will remain (i.e. user.name, etc.)
     user.name = firstName && lastName ? `${firstName} ${lastName}` : user.name;
@@ -177,6 +175,8 @@ const updateUserProfile = async (req, res) => {
   } else {
     res.status(404).json({ message: "User not found" });
   }
+  */
+  res.status(200).json({ message: "file sent" });
 };
 // to see a delete request for an s3 bucket file if a user wants to delete their own account (@35 minutes): https://www.youtube.com/watch?v=eQAIojcArRY&list=PL0X6fGhFFNTeGDRuMlQBO1fs4vvQA48tM&index=2
 

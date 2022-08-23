@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import Todo from "../models/todoModel.js";
-import User from "../models/userModel.js";
 
 export const getUserTodos = async (req, res) => {
   try {
-    const todos = await Todo.find();
-
+    // get todos list based on each signed up user
+    const todos = await Todo.find({ user: req.user._id });
+    // console.log("user's todos in the backend:", todos);
     res.status(200).json(todos);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -14,11 +14,14 @@ export const getUserTodos = async (req, res) => {
 
 export const createUserTodos = async (req, res) => {
   const todo = req.body; // the whole todo
+  const { _id } = req.user;
 
-  const newTodo = new Todo(todo);
+  const newTodo = new Todo({ ...todo, user: _id });
+  // console.log("new todo: ", newTodo);
+
   try {
     await newTodo.save();
-
+    // console.log("new todo: ", typeof newTodo);
     //status 201 = new creation successful
     res.status(201).json(newTodo);
   } catch (error) {

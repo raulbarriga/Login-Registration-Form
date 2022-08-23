@@ -22,9 +22,9 @@ export const logIn = async (formData) => {
     },
   };
   try {
-    console.log("index formData: ", formData)
-    const {data} = await API.post("/users/login", formData, config);
-    console.log("index response: ", data)
+    console.log("index formData: ", formData);
+    const { data } = await API.post("/users/login", formData, config);
+    console.log("index response: ", data);
 
     return data;
   } catch (error) {
@@ -35,8 +35,7 @@ export const logIn = async (formData) => {
 export const register = async (formData) => {
   const config = {
     headers: {
-      // "Content-Type": "application/json",
-      "Content-Type": "multipart/form-data"
+      "Content-Type": "application/json",
     },
   };
   try {
@@ -67,18 +66,16 @@ export const getUserProfile = async (id) => {
   }
 };
 
-export const updateUserProfile = async (user) => {
+export const updateUserProfile = async (formData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      // "Content-Type": "multipart/form-data",
-      // Authorization: `Bearer ${userInfo.token}`,
+      "Content-Type": "multipart/form-data",
     },
   };
-  console.log("index file user: ", user);
+  console.log("index file user: ", ...formData);
   try {
-    const { data } = await API.put(`/users/profile`, user, config);
-
+    const { data } = await API.put(`/users/profile`, formData, config);
+    console.log("index file user update data received: ", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -87,24 +84,27 @@ export const updateUserProfile = async (user) => {
 
 // // heroku server url
 // const url = process.env.PRODUCTION_URL;
-
-export const getTodos = async () => {
+/*********************** TODOS ******************************/
+export const getTodos = async (userID) => {
   try {
-    const { data } = await API.get("/todos");
-    console.log(data);
+    const { data } = await API.get("/todos", userID);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const createTodo = async (newTodo) => {
+export const createTodo = async (newTodo, userID) => {
   try {
     const todo = {
       todo: newTodo.todo,
       completed: newTodo.completed,
+      user: userID,
     };
     const { data } = await API.post("/todos", todo);
+    // console.log("returned created todo: ", data);
+    // console.log("returned created todo: ", typeof data);
 
     return data;
   } catch (error) {
@@ -122,7 +122,7 @@ export const deleteATodo = async (_id) => {
 
 export const editTodo = async (_id, todoChange) => {
   try {
-    console.log(todoChange);
+    // console.log(todoChange);
 
     const data = await API.patch(`/todos/${_id}`, todoChange);
     return data;
@@ -130,3 +130,4 @@ export const editTodo = async (_id, todoChange) => {
     console.log(error.message);
   }
 };
+/*****************************************************/
