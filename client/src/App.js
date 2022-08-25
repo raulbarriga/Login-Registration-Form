@@ -9,6 +9,7 @@ import TodoList from "./components/TodoList/TodoList";
 
 import AuthProvider from "./contexts/authContext";
 import TodosProvider from "./contexts/todosContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const App = () => {
   const location = useLocation();
@@ -20,13 +21,22 @@ const App = () => {
           <Route path="/" element={<Home />} />
           {/* One route for both registration or log in */}
           <Route path="auth" element={<Auth />} />
-          <Route path="profile" element={<Profile />} />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="todos"
             element={
-              <TodosProvider>
-                <TodoList />
-              </TodosProvider>
+              <ProtectedRoute>
+                <TodosProvider>
+                  <TodoList />
+                </TodosProvider>
+              </ProtectedRoute>
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />

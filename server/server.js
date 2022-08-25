@@ -11,7 +11,7 @@ dotenv.config();
 // connect the MongoDB database
 connectDB();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(morgan("dev"));
@@ -20,6 +20,10 @@ app.use(cors());
 
 app.use("/todos", todoRoutes);
 app.use("/users", userRoutes);
+
+app.get("/", (req, res) => {
+  res.send("API is running....");
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port:${PORT}`);

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // server url
-const API = axios.create({ baseURL: "http://localhost:8000" });
+const API = axios.create({ baseURL: "http://localhost:5000" });
 
 // this happens before all the requests
 API.interceptors.request.use((req) => {

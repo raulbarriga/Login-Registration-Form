@@ -1,4 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import decode from "jwt-decode";
+
 // import useLocalStorage from "../hooks/useLocalStorage";
 import {
   register,
@@ -12,6 +15,9 @@ export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState({});
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function init() {
@@ -27,6 +33,25 @@ const AuthProvider = ({ children }) => {
     if (Object.keys(userDetails).length !== 0)
       localStorage.setItem("profile", JSON.stringify(userDetails));
   }, [userDetails]);
+
+  const logout = () => {
+    navigate("/auth");
+
+    localStorage.removeItem("profile");
+  };
+
+  useEffect(() => {
+    const token = userDetails?.token;
+
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+
+    // setUser(JSON.parse(localStorage.getItem("profile")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   const signUp = async (formData, navigate) => {
     try {
@@ -79,6 +104,7 @@ const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        logout,
         signUp,
         signIn,
         updateUserDetails,

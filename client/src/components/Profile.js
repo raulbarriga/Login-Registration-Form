@@ -50,7 +50,7 @@ const Profile = () => {
       setSuccess(false);
     } else {
       updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
-      setMessage(null);
+      setMessage("Profile Updated");
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
         ...prevState,
@@ -69,6 +69,25 @@ const Profile = () => {
       [e.target.name]: e.target.value,
     });
 
+  // const Message = () => {
+
+  // }
+  useEffect(() => {
+    // message is empty (meaning no errors). Adjust as needed
+    // if (!message) {
+    //   setIsVisible(false);
+    //   return;
+    // }
+
+    // error exists. Display the message and hide after 5 secs
+    // setIsVisible(true)
+    const timer = setTimeout(() => {
+      setSuccess(false);
+      setMessage(null);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [success]);
+
   return (
     <div className="profile-wrapper">
       <h2>User Profile</h2>
@@ -76,9 +95,7 @@ const Profile = () => {
       <br />
       Email: {updatedUserInfo.email}
       <br />
-      {message && <span>{message}</span>}
-      <br />
-      {success && <span>Profile Updated</span>}
+      {success && <span>{message}</span>}
       <br />
       <form onSubmit={submitHandler}>
         <label htmlFor="First-Name">First Name</label>
