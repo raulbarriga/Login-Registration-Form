@@ -53,12 +53,11 @@ export const getUserProfile = async (id) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      // Authorization: `Bearer ${userInfo.token}`,
     },
   };
 
   try {
-    const { data } = await API.get(`/users/${id}`, config);
+    const { data } = await API.get(`/users/profile/${id}`, config);
 
     return data;
   } catch (error) {
@@ -72,7 +71,7 @@ export const updateUserProfile = async (formData) => {
       "Content-Type": "multipart/form-data",
     },
   };
-  console.log("index file user: ", ...formData);
+  console.log("index file user before update: ", ...formData);
   try {
     const { data } = await API.put(`/users/profile`, formData, config);
     console.log("index file user update data received: ", data);

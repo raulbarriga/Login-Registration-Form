@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(userDetails).length !== 0)
+    if (userDetails && Object.keys(userDetails).length !== 0)
       localStorage.setItem("profile", JSON.stringify(userDetails));
   }, [userDetails]);
 
@@ -72,8 +72,8 @@ const AuthProvider = ({ children }) => {
       console.log("context after update: ", data)
 
       // return data;
-      setUserDetails(data);
-      localStorage.setItem("profile", JSON.stringify(userDetails));
+      // setUserDetails(data);
+      // localStorage.setItem("profile", JSON.stringify(userDetails));
     } catch (error) {
       console.log(error);
     }

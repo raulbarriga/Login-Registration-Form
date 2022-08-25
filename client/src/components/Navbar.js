@@ -32,15 +32,15 @@ const Navbar = () => {
 
   return (
     <>
-      {Object.keys(userDetails).length !== 0 ? (
-        <div>
+      {userDetails && Object.keys(userDetails).length !== 0 ? (
+        <div style={{ backgroundColor: "rgb(29, 19, 19)", color: "white" }}>
           <span>
             <h6>{userDetails.name}</h6>
           </span>
           <button onClick={logout}>Logout</button>
-          <Link to="todos">Todos</Link>
-          <Link to="home">Home</Link>
-          <Link to="profile">Profile</Link>
+          <Link style={{ backgroundColor: "rgb(29, 19, 19)", color: "white" }} to="todos">Todos</Link>
+          <Link style={{ backgroundColor: "rgb(29, 19, 19)", color: "white" }} to="home">Home</Link>
+          <Link style={{ backgroundColor: "rgb(29, 19, 19)", color: "white" }} to="profile">Profile</Link>
         </div>
       ) : (
         <Link to="/auth">Sign In</Link>
