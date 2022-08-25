@@ -55,9 +55,9 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const fetchUserDetails = async (id) => {
+  const fetchUserDetails = async (userID) => {
     try {
-      const data = await getUserProfile(id);
+      const data = await getUserProfile(userID);
 
       return data;
     } catch (error) {
@@ -65,13 +65,10 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserDetails = async (user) => {
+  const updateUserDetails = async (userInfo) => {
     try {
-      console.log("context before update: ", ...user)
-      const data = await updateUserProfile(user);
-      console.log("context after update: ", data)
+      const data = await updateUserProfile(userInfo);
 
-      // return data;
       setUserDetails(data);
       localStorage.setItem("profile", JSON.stringify(userDetails));
     } catch (error) {

@@ -11,9 +11,7 @@ const Profile = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    pic: "",
   });
-  // const [selectedImage, setSelectedImage] = useState(null)
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -41,35 +39,17 @@ const Profile = () => {
         ...prevState,
         email: userDetails.email,
       }));
-      setUpdatedUserInfo((prevState) => ({
-        ...prevState,
-        pic: userDetails.pic,
-      }));
     }
   }, [navigate, userDetails]);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    let formData = new FormData();
-
-    for (let [key, value] of Object.entries(updatedUserInfo)) {
-      formData.append(JSON.stringify(key), value);
-    }
-    formData.append("id", userDetails._id);
-    /* 
-    // to console log formData
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-    */
-    console.log("...formData: ", ...formData);
-
     if (updatedUserInfo.password !== updatedUserInfo.confirmPassword) {
       setMessage("Passwords do not match");
       setSuccess(false);
     } else {
-      updateUserDetails(formData);
+      updateUserDetails({ id: userDetails._id, ...updatedUserInfo });
       setMessage(null);
       setSuccess(true);
       setUpdatedUserInfo((prevState) => ({
@@ -83,14 +63,11 @@ const Profile = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setUpdatedUserInfo({
       ...updatedUserInfo,
-      [e.target.name]:
-        e.target.name === "pic" ? e.target.files[0] : e.target.value,
+      [e.target.name]: e.target.value,
     });
-    console.log("updatedUserInfo.pic onChange: ", updatedUserInfo);
-  };
 
   return (
     <div className="profile-wrapper">
@@ -99,23 +76,11 @@ const Profile = () => {
       <br />
       Email: {updatedUserInfo.email}
       <br />
-      <img src={updatedUserInfo.pic} alt="user" />
-      <br />
       {message && <span>{message}</span>}
       <br />
       {success && <span>Profile Updated</span>}
       <br />
-      {/* <img src={updatedUserInfo.pic} alt="profile-img" /> */}
       <form onSubmit={submitHandler}>
-        <label htmlFor="user-img">User Image</label>
-        <input
-          name="pic"
-          id="user-img"
-          // (e) => setSelectedImage(e.target.files[0])
-          onChange={handleChange}
-          type="file"
-          // alt="profile-image"
-        />
         <label htmlFor="First-Name">First Name</label>
         <input
           name="firstName"
@@ -155,16 +120,6 @@ const Profile = () => {
           onChange={handleChange}
           type="password"
         />
-        {/* <label htmlFor="user-img">User Image</label>
-        <input
-          name="pic"
-          id="user-img"
-          // value={updatedUserInfo.pic}
-
-          onChange={handleChange}
-          type="file"
-          // alt="profile-image"
-        /> */}
         <button type="submit">Update</button>
       </form>
     </div>

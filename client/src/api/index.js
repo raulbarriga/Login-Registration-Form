@@ -53,7 +53,6 @@ export const getUserProfile = async (id) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      // Authorization: `Bearer ${userInfo.token}`,
     },
   };
 
@@ -66,16 +65,15 @@ export const getUserProfile = async (id) => {
   }
 };
 
-export const updateUserProfile = async (formData) => {
+export const updateUserProfile = async (userInfo) => {
   const config = {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     },
   };
-  console.log("index file user: ", ...formData);
   try {
-    const { data } = await API.put(`/users/profile`, formData, config);
-    console.log("index file user update data received: ", data);
+    const { data } = await API.put(`/users/profile`, userInfo, config);
+
     return data;
   } catch (error) {
     console.log(error);
@@ -84,6 +82,7 @@ export const updateUserProfile = async (formData) => {
 
 // // heroku server url
 // const url = process.env.PRODUCTION_URL;
+
 /*********************** TODOS ******************************/
 export const getTodos = async (userID) => {
   try {

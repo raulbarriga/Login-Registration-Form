@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <>
-      {Object.keys(userDetails).length !== 0 ? (
+      {userDetails && Object.keys(userDetails).length !== 0 ? (
         <div>
           <span>
             <h6>{userDetails.name}</h6>
