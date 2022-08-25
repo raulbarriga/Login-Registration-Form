@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = mongoose.Schema(
+const Schema = mongoose.Schema;
+
+const userSchema = Schema(
   {
     name: {
       type: String,
@@ -20,7 +22,13 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       required: true,
       default: false,
-    }
+    },
+    todos: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "TodoData",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -37,11 +45,11 @@ userSchema.pre("save", async function (next) {
     next();
   }
 
-  const salt = await bcrypt.genSalt(12); 
-// "this.password" is the modified sent password
-// we reset "this.password" from a text password to be hashed/encrypted now
-  this.password = await bcrypt.hash(this.password, salt); 
-}); 
+  const salt = await bcrypt.genSalt(12);
+  // "this.password" is the modified sent password
+  // we reset "this.password" from a text password to be hashed/encrypted now
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 const User = mongoose.model("User", userSchema);
 
